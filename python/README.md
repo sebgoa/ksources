@@ -1,29 +1,25 @@
-## NOTES
+## Python basic sample
 
-- Use ENTRYPOINT and not CMD otherwise the `--sink` will be parsed as an executable and not an argument
-- env var SINK gives you the address of the sink defined in the manifest
-- GOOGLE_APPLICATION_CREDENTIALS needs to be a file so load string as secret and write string to file
-- referencing a bucket is three hops: bucket -> topic -> subscription (which you set in pubsub menu)
-- casting cloudevent is a pain
-- need to change ImagePullPolicy of deployment created by container source controller
+This basic Python event source sends `Hello World` every 60 seconds.
 
-## IAM service account.
- 
-* Create a service account in GCP console with a PubSub subscriber role.
-* Generate the key file and store it in `json`
-* Create a k8s secret that contains the service account key
+It uses the Python `requests` module and gets the sink URL from the environment variable SINK
 
 ```
-kubectl create secret generic pubsub --from-file=/path/to/key.json
-```
+#!/usr/bin/env python
 
-## Create a topic and a subscription
+import os
+import json
+import requests
+import time
 
-```
-gsutil notification create -t foobar -f json gs://sebgoa
-gsutil notification list gs://sebgoa
-gcloud pubsub subscriptions create foobarsub --topic foobar
-Created subscription [projects/skippbox/subscriptions/foobarsub].
+sink_url = os.environ['SINK']
+
+body = {"Hello":"World"}
+headers = {'Content-Type': 'application/cloudevents+json'}
+
+while True:
+    requests.post(sink_url, data=json.dumps(body), headers=headers)
+    time.sleep(60)
 ```
 
 ## Build and Push Docker image
@@ -31,12 +27,12 @@ Created subscription [projects/skippbox/subscriptions/foobarsub].
 Use your own registry
 
 ```
-docker build -t gcr.io/triggermesh/gcssource
-docker push gcr.io/triggermesh/gcsource
+docker build -t gcr.io/triggermesh/pythonsample
+docker push gcr.io/triggermesh/pythonsample
 ```
 
 ## Deploy the source on your k8s cluster
 
 ```
-kubectl apply -f gcssource.yaml
+kubectl apply -f manifest.yaml
 ```

@@ -1,0 +1,23 @@
+---
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: ContainerSource
+metadata:
+  name: gcs
+spec:
+  image: gcr.io/triggermesh/python
+  sink:
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Channel
+    name: default
+  env:
+    - name: PROJECT
+      value: triggermesh
+    - name: SUBSCRIPTION
+      value: knsub
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /tmp/key.json
+    - name: CREDENTIALS
+      valueFrom:
+        secretKeyRef:
+          name: pubsub
+          key: key.json

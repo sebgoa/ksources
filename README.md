@@ -123,6 +123,7 @@ Each directory contains a `manifest.yaml` manifest to deploy the event source
 * [bash](./bash)
 * [bash with cloudevents](./bash-ce)
 * [python](./python)
+* [python for Google Cloud Storage](./python-gcs)
 
 ## Support
 

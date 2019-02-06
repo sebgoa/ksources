@@ -95,6 +95,17 @@ This leads to two technical details
 - Use ENTRYPOINT and not CMD in your Dockerfile, otherwise the `--sink` will be parsed as an executable and not an argument
 - You can use the environment variable SINK which gives you the address of the sink defined in the manifest
 
+
+## Testing tips
+
+Use the `message-dumper` as an event receiver. This is a knative service which dumps the incoming events to stdout.
+
+You can create it with:
+
+```
+kubectl apply -f https://github.com/knative/eventing-sources/releases/download/v0.3.0/message-dumper.yaml
+```
+
 ## CloudEvents specification
 
 The Cloud Native Computing Foundation [CNCF](https://cncf.io) through its serverless working group has developed a specification for [Cloud Events](https://cloudevents.io/).

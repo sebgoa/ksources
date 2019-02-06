@@ -24,7 +24,42 @@ Each directory contains a `manifest.yaml` manifest to deploy the event source
 
 ## Concepts
 
+A container source generates events and forwards those events to an event receiver called a _sink_.
+
+There are two types of container sources depicted in the diagram below.
+
+a) Container sources that generate events in an autonomous manner (e.g Task that runs at a regular interval)
+b) Container sources that pull events from a third-party event provider (e.g Google PubSub, Weather service)
+
 ![ContainerSource types](./images/containersource.png)
+
+Event sources that need a publicy accessible endpoint (i.e WebHook) tend to be written using a Kubernetes controller (see this [tutorial](https://github.com/knative/docs/blob/master/eventing/samples/writing-a-source/README.md))
+
+A _sink_ receives the events send by the container source. In the context of Function as a Service, you can think of a _sink_ as a function, but it could be something else.
+
+## Specification
+
+Container Sources are custom Kubernetes objects. A well configured Knative cluster will have the `ContainerSource` Custom Resource Definition pre-defined and you will be able to create custom objects of the `Kind` `ContainerSource`.
+
+A sample manifest is shown below. Like most Kubernetes objects it has an `apiVersion`, a `kind`, some `metadata` with a mandatory name and a spec. The specification of a Container Source is fully described in the [API](https://github.com/knative/eventing-sources/blob/master/pkg/apis/sources/v1alpha1/containersource_types.go
+) but in its simplest form contains a container _image_ (which once running will generate or pull the events) and a _sink_ which is the event receiver.
+
+```yaml
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: ContainerSource
+metadata:
+  name: bashsample
+spec:
+  image: gcr.io/triggermesh/bash
+  sink:
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Channel
+    name: default
+```
+
+### Version
+
+The specification is still `v1alpha1` and may change. In addition to the image name and the sink, you can also define a set of environment variables, some arguments to the container and a service account name.
 
 ## Technical Tips
 

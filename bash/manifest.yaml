@@ -4,7 +4,7 @@ kind: ContainerSource
 metadata:
   name: bashtoy
 spec:
-  image: gcr.io/triggermesh/bashsource:0.0.5
+  image: gcr.io/triggermesh/bash
   sink:
     apiVersion: eventing.knative.dev/v1alpha1
     kind: Channel

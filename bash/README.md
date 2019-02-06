@@ -1,11 +1,14 @@
-## NOTES
+# Bash event source
 
-- Use ENTRYPOINT and not CMD otherwise the `--sink` will be parsed as an executable and not an argument
-- env var SINK gives you the address of the sink defined in the manifest
+This is a demo event source for knative written in bash.
 
-## Build and Push Docker image
+* The bash script `event.sh` continuously sends `{"Hello":"World"}` to an HTTP endpoint.
+* The script is Containerized via a `Dockerfile`
+* The container is started via a Container Source described in the manifest `source.yaml`
 
-Use your own registry
+## Build and Push Docker image manually
+
+Use your own registry by replacing the `triggermesh` org below:
 
 ```
 docker build -t gcr.io/triggermesh/bashsource .

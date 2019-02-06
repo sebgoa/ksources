@@ -1,0 +1,17 @@
+steps:
+## Build Bash sample
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/bash:latest', '-f' ,'./bash/Dockerfile', '.' ]
+
+## Build Bash-ce source
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/bash-ce:latest', '-f' ,'./bash-ce/Dockerfile', '.' ]
+
+## Build Python source
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/python:latest', '-f' ,'./python/Dockerfile', '.' ]
+
+images: 
+  - 'gcr.io/$PROJECT_ID/bash'
+  - 'gcr.io/$PROJECT_ID/bashce'
+  - 'gcr.io/$PROJECT_ID/python'

@@ -1,0 +1,11 @@
+---
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: ContainerSource
+metadata:
+  name: bashtoy
+spec:
+  image: gcr.io/triggermesh/bashsource:0.0.5
+  sink:
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Channel
+    name: default

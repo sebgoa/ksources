@@ -2,13 +2,15 @@
 
 import os
 import requests
+import json
+import datetime
 
 from google.cloud import pubsub_v1
 
 from cloudevents.sdk import converters
 from cloudevents.sdk import marshaller
 from cloudevents.sdk.converters import structured
-from cloudevents.sdk.event import v01
+from cloudevents.sdk.event import v02
 
 gcp_project = os.environ['PROJECT']
 gcs_subscription = os.environ['SUBSCRIPTION']
@@ -22,27 +24,22 @@ def write_credentials():
   fh.close() 
 
 def callback(message):
-    print(message.data.decode())
+    print(message)
     print(sink_url)
 
     event = (
-        v01.Event().
+        v02.Event().
         SetContentType("application/json").
         SetData(message.data.decode()).
-        SetEventID("my-id").
-        SetSource("from-galaxy-far-far-away").
-        SetEventTime("tomorrow").
-        SetEventType("cloudevent.greet.you")
+        SetEventID("xxx-yyy-zzz-www").
+        SetSource("google cloud storage").
+        SetEventTime(str(message.attributes['eventTime'])).
+        SetEventType(str(message.attributes['eventType']))
     )
-    m = marshaller.NewHTTPMarshaller(
-        [
-            structured.NewJSONHTTPCloudEventConverter()
-        ]
-    )
+    m = marshaller.NewDefaultHTTPMarshaller()
+    headers, body = m.ToRequest(event, converters.TypeStructured, json.dumps)
 
-    headers, body = m.ToRequest(event, converters.TypeStructured, lambda x: x)
-
-    requests.post(sink_url, data=body, headers=headers)
+    requests.post(sink_url, data=body.getvalue(), headers=headers)
     message.ack()
 
 write_credentials()

@@ -4,7 +4,7 @@ kind: ContainerSource
 metadata:
   name: gcs
 spec:
-  image: gcr.io/triggermesh/python
+  image: gcr.io/triggermesh/python-gcs:0.0.1
   sink:
     apiVersion: eventing.knative.dev/v1alpha1
     kind: Channel

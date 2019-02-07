@@ -1,0 +1,11 @@
+---
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: ContainerSource
+metadata:
+  name: python-ce
+spec:
+  image: gcr.io/triggermesh/python-ce
+  sink:
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Channel
+    name: default
